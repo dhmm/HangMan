@@ -1,0 +1,100 @@
+.container {
+    margin-top:50px;
+}
+.btn {
+    margin-right:2px;
+}
+
+.hangmanCol {
+    /*background:yellow;*/
+}
+.panelCol {    
+    /*background:blue;*/
+}
+
+
+.hangmanContainer {
+    width:100px;
+    margin-bottom:80px;
+    border:1px solid black;
+    display:table;
+    padding:30px;
+}
+.hangmanHead {
+    border: 1px solid black;
+    border-radius: 45px;
+    width:30px;
+    height:30px;
+    margin: 0 auto;    
+} 
+.hangmanHeadDown {
+    border:1px solid black;
+    width:1px;
+    height:5px;    
+    margin: 0 auto;
+}
+.hangmanBodyContainer{
+    background:none;
+    width:100px;    
+}
+.hangmanBody {
+    border: 1px solid black;
+    border-radius: 20px;
+    width:50px;
+    height:50px;    
+    margin-left:25px;
+    
+    
+    
+}
+.hangmanLeftArm {
+    border: 1px solid black;
+    width:32px;
+    height:1px;   
+    float:left;
+    margin-top: -35px;
+    -ms-transform: rotate(-30deg); /* IE 9 */
+    -webkit-transform: rotate(-30deg); /* Safari */
+    transform: rotate(-30deg);
+}
+.hangmanRightArm {
+    border: 1px solid black;
+    width:32px;
+    height:1px;   
+    float:right;
+    margin-top: -35px;        
+    -ms-transform: rotate(30deg); /* IE 9 */
+    -webkit-transform: rotate(30deg); /* Safari */
+    transform: rotate(30deg);
+}
+.hangmanLeftLeg {
+    border: 1px solid black;
+    width:1px;
+    height:43px;
+    margin: 0 auto;
+    float:left;
+    margin-left:35px;
+    margin-top:-3px;
+}
+.hangmanRightLeg {
+    border: 1px solid black;
+    width:1px;
+    height:43px;
+    margin: 0 auto;
+    float:right;
+    margin-right:35px;
+    margin-top:-3px;
+}
+
+.wordContainer {
+    height:30px;
+    margin-bottom:10px;
+}
+.wordLetter
+{
+    border:1px solid black;    
+    padding:6px;
+    margin-right:5px;
+    display:inline;
+    text-align:center;
+}
