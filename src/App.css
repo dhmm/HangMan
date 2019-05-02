@@ -8,24 +8,26 @@
 .hangmanCol {
     /*background:yellow;*/
 }
-.panelCol {    
+.panelCol {
+    
     /*background:blue;*/
 }
 
 
 .hangmanContainer {
-    width:100px;
-    margin-bottom:80px;
-    border:1px solid black;
+    width:150px;
+    height:200px;
+    margin-bottom:80px;    
     display:table;
-    padding:30px;
+    padding:30px;    
+    border: 1px solid black;
 }
 .hangmanHead {
     border: 1px solid black;
     border-radius: 45px;
     width:30px;
     height:30px;
-    margin: 0 auto;    
+    margin: 0 auto;        
 } 
 .hangmanHeadDown {
     border:1px solid black;
@@ -35,21 +37,18 @@
 }
 .hangmanBodyContainer{
     background:none;
-    width:100px;    
+    width:80px;    
 }
 .hangmanBody {
     border: 1px solid black;
     border-radius: 20px;
-    width:50px;
-    height:50px;    
-    margin-left:25px;
-    
-    
-    
+    width:40px;
+    height:50px;        
+    margin-left:24px;          
 }
 .hangmanLeftArm {
     border: 1px solid black;
-    width:32px;
+    width:30px;
     height:1px;   
     float:left;
     margin-top: -35px;
@@ -59,10 +58,11 @@
 }
 .hangmanRightArm {
     border: 1px solid black;
-    width:32px;
+    width:30px;
     height:1px;   
     float:right;
     margin-top: -35px;        
+    margin-right: -8px;
     -ms-transform: rotate(30deg); /* IE 9 */
     -webkit-transform: rotate(30deg); /* Safari */
     transform: rotate(30deg);
@@ -70,19 +70,19 @@
 .hangmanLeftLeg {
     border: 1px solid black;
     width:1px;
-    height:43px;
+    height:46px;
     margin: 0 auto;
     float:left;
-    margin-left:35px;
+    margin-left:33px;
     margin-top:-3px;
 }
 .hangmanRightLeg {
     border: 1px solid black;
     width:1px;
-    height:43px;
+    height:46px;
     margin: 0 auto;
     float:right;
-    margin-right:35px;
+    margin-right:33px;
     margin-top:-3px;
 }
 
