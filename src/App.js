@@ -52,33 +52,45 @@ class Letter extends React.Component {
     super(props);
 
     this.state = {
+      gameFinished : false ,
       disabled: false ,
       activeClassName : "btn btn-sm btn-primary" ,
       background : buttonEnabledBgColor ,
       check : this.props.check
     };
-
+    
     this.disable = () => {
-      this.setState ({
-        disabled : true,
-        activeClassName : "btn btn-sm btn-primary disabled",
-        background : buttonDisabledBgColor
-      });
+      if(this.state.gameFinished === false) {
+        this.setState ({
+          disabled : true,
+          activeClassName : "btn btn-sm btn-primary disabled",
+          background : buttonDisabledBgColor
+        });
+      }
     }
     this.enable = () => {
-      this.setState ({
-        disabled : false,
-        activeClassName : "btn btn-sm btn-primary",
-        background : buttonEnabledBgColor
-      });
+      if(this.state.gameFinished === false) {
+        this.setState ({
+          disabled : false,
+          activeClassName : "btn btn-sm btn-primary",
+          background : buttonEnabledBgColor
+        });
+      }
     }
     this.checkLetter = () => {
-      if(this.state.disabled!==true) {        
-        this.disable();
-        this.state.check(this.state.letter);
+      if(this.state.gameFinished === false) {
+        if(this.state.disabled!==true) {        
+          this.disable();
+          this.state.check(this.state.letter);
+        }
       }
     }
     
+  }
+  gameFinished = ()=> {
+    this.setState({
+      gameFinished: true
+    })
   }
   render(){
     return(
@@ -198,6 +210,7 @@ class Game extends React.Component {
     this.wordComponent = React.createRef();
     this.hangManComponent = React.createRef();
     this.panelComponent = React.createRef();
+    this.lettersComponents = new Array();
 
     let WORD = "test";
 
@@ -211,6 +224,10 @@ class Game extends React.Component {
       win : false,
       lost: false
     } 
+
+    for(let i=0; i<letters.length;i++) {
+      this.lettersComponents[i] = React.createRef();             
+    }
 
     this.howManyTimesExists = (letter) => {
       if( !this.state.win && !this.state.lost ) {
@@ -250,6 +267,7 @@ class Game extends React.Component {
             this.setState({
               win:true
             });
+            this.gameFinished();
           }
         }
         else
@@ -264,14 +282,21 @@ class Game extends React.Component {
             this.setState({
               lost:true
             });
+            this.gameFinished();
           }        
         } 
       }     
     }    
 
-    this.check = (letter , checkWin) => {
+    this.check = (letter) => {
       if( !this.state.win && !this.state.lost ) {
-        this.checkLetter(letter , this.checkIfWin);
+        this.checkLetter(letter);
+      }
+    }
+
+    this.gameFinished = () => {
+      for(let i=0;i<letters.length;i++) {
+        this.lettersComponents[i].current.gameFinished();
       }
     }
 
@@ -279,6 +304,7 @@ class Game extends React.Component {
 
   render()
   {
+    let i=0;
     return(
       <div>
       <div className="row">
@@ -307,9 +333,9 @@ class Game extends React.Component {
       </div>
       <div className="row">
         <div className="col-md-12">
-          { 
+          {            
             letters.map((letter) => {
-              return <Letter letter={letter} check={evt=> this.check(letter)} />
+              return <Letter letter={letter} check={evt=> this.check(letter)} ref={this.lettersComponents[i++]} />
             })
           }
         </div>        
