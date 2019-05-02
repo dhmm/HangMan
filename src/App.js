@@ -7,15 +7,8 @@ const letters = [
   'A' , 'B' , 'C' , 'D' , 'E' , 'F' ,'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
 ];
 const singleCharScore = 50;
+let WORDS_LIST = [];
 
-class Button extends React.Component {
-  render()
-  {
-    return(
-      <div className="btn btn-sm btn-primary">{this.props.title}</div>
-    );
-  }
-}
 class HangMan extends React.Component {
   constructor(props) {
     super(props);
@@ -238,16 +231,18 @@ class Panel extends React.Component {
     );
   }
 }
-class Game extends React.Component {
+class Game extends React.Component {  
   constructor(props)
   {
-    super(props);
+    super(props);        
+
     this.wordComponent = React.createRef();
     this.hangManComponent = React.createRef();
     this.panelComponent = React.createRef();
     this.lettersComponents = [];
 
-    let WORD = "test";
+    
+    let WORD = this.selectRandomWord();
 
     this.state = {
       mistakes : 0,
@@ -260,14 +255,25 @@ class Game extends React.Component {
       lost: false
     } 
 
+    this.selectRandomWord();
+
     for(let i=0; i<letters.length;i++) {
       this.lettersComponents[i] = React.createRef();             
     }   
   }
 
+  selectRandomWord = () => {
+    let wordsLength = WORDS_LIST.length;
+    let min = 1;
+    let max = wordsLength;
+    let rand = parseInt( (min + Math.random() * (max - min)) );
+    rand--;       
+    return WORDS_LIST[rand] ;
+
+  }
   newGame = () => {
     
-    let WORD = "test";
+    let WORD = this.selectRandomWord();
     this.setState({
       mistakes : 0,
       score : 0,
@@ -404,7 +410,21 @@ class Game extends React.Component {
 
 
 
-function App() {    
+function App() {   
+  var rawFile = new XMLHttpRequest();
+  rawFile.open("GET", "./words.txt", false);
+  rawFile.onreadystatechange = () => {
+    if (rawFile.readyState === 4) {
+      if (rawFile.status === 200 || rawFile.status == 0) {
+        var allText = rawFile.responseText;
+        WORDS_LIST = allText.split("\r\n"); 
+        console.log(WORDS_LIST);         
+      }
+    }
+  };
+  rawFile.send(null);
+  
+
   return (
     <Game/>
   );
