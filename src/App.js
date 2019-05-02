@@ -6,6 +6,7 @@ const buttonDisabledBgColor = '#654321';
 const letters = [
   'A' , 'B' , 'C' , 'D' , 'E' , 'F' ,'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
 ];
+const singleCharScore = 50;
 
 class Button extends React.Component {
   render()
@@ -157,19 +158,35 @@ class Panel extends React.Component {
   constructor(props)
   {    
     super(props);
-
     this.state = {
       score: 0 ,
       message : ''      
     }
-
-
   }
+
+  addScore(score) {
+    this.setState({
+      score: this.state.score+score
+    })
+  }
+
+  youWin() {
+    this.setState({
+      message: 'You winnn !!!!'
+    })
+  }
+
+  youLost() {
+    this.setState({
+      message: 'You lost :( !!!!'
+    })
+  }
+
   render() {
     return (
       <div>
         <div>Score : <b>{this.state.score}</b></div>
-        <div>{this.state.message}</div>
+        <div><h4>{this.state.message}</h4></div>
       </div>
     );
   }
@@ -180,18 +197,67 @@ class Game extends React.Component {
     super(props);
     this.wordComponent = React.createRef();
     this.hangManComponent = React.createRef();
+    this.panelComponent = React.createRef();
+
+    let WORD = "test";
 
     this.state = {
       mistakes : 0,
       score : 0,
-      word: 'ALELA' 
+      word: WORD.toUpperCase(),
+      wordLength : WORD.length,
+      findedLetters : 0
     } 
+
+    this.howManyTimesExists = (letter) => {
+      let times = 0;
+      for(let i = 0;i<this.state.word.length;i++) {
+        if(this.state.word[i]===letter) {
+          times++;
+        }
+      }      
+      return times;
+    }
+
     this.checkLetter = (letter)=> {
-      if(this.state.word.indexOf(letter) > -1 ) {          
-        this.wordComponent.current.showLetter(letter);      
-      } else {
-        this.hangManComponent.current.increaseMistakes();
+      let times = this.howManyTimesExists(letter); 
+      let addToScore = singleCharScore;
+      if(times > 0 )
+      {              
+        if(times > 1)
+        {
+          addToScore = times * ( singleCharScore * times);
+        } 
+        
+        let newScore = this.state.score+addToScore;
+        let newFindedLetters = this.state.findedLetters + times;
+
+        this.setState({
+          score: newScore ,
+          findedLetters : newFindedLetters
+        });                
+        this.panelComponent.current.addScore(addToScore);
+        this.wordComponent.current.showLetter(letter);    
+        
+        if(this.state.wordLength === newFindedLetters) {
+          this.panelComponent.current.youWin();
+        }
       }
+      else
+      {
+        let newMistakes = this.state.mistakes + 1;  
+        this.setState({
+          mistakes: newMistakes
+        })             
+        this.hangManComponent.current.increaseMistakes();
+        if(newMistakes== 7){
+          this.panelComponent.current.youLost();
+        }        
+      }      
+    }    
+
+    this.check = (letter , checkWin) => {
+      this.checkLetter(letter , this.checkIfWin);
     }
 
   }
@@ -213,7 +279,7 @@ class Game extends React.Component {
           <div className="row">&nbsp;</div>
           <div className="row">
             <div className="col-md-12">
-              <Panel/>
+              <Panel ref={this.panelComponent}/>
             </div>
           </div>
           
@@ -221,14 +287,14 @@ class Game extends React.Component {
       </div>
       <div className="row">
         <div className="col-md-12">
-          {<Word word="ALELA" ref={this.wordComponent}/>}
+          {<Word word={this.state.word} ref={this.wordComponent}/>}
         </div>
       </div>
       <div className="row">
         <div className="col-md-12">
           { 
             letters.map((letter) => {
-              return <Letter letter={letter} fnCheckLetter={evt=> this.checkLetter(letter)} />
+              return <Letter letter={letter} fnCheckLetter={evt=> this.check(letter)} />
             })
           }
         </div>        
