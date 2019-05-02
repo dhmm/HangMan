@@ -55,7 +55,7 @@ class Letter extends React.Component {
       disabled: false ,
       activeClassName : "btn btn-sm btn-primary" ,
       background : buttonEnabledBgColor ,
-      fnCheckLetter : this.props.fnCheckLetter
+      check : this.props.check
     };
 
     this.disable = () => {
@@ -75,7 +75,7 @@ class Letter extends React.Component {
     this.checkLetter = () => {
       if(this.state.disabled!==true) {        
         this.disable();
-        this.state.fnCheckLetter(this.state.letter);
+        this.state.check(this.state.letter);
       }
     }
     
@@ -206,58 +206,73 @@ class Game extends React.Component {
       score : 0,
       word: WORD.toUpperCase(),
       wordLength : WORD.length,
-      findedLetters : 0
+      findedLetters : 0 ,
+
+      win : false,
+      lost: false
     } 
 
     this.howManyTimesExists = (letter) => {
-      let times = 0;
-      for(let i = 0;i<this.state.word.length;i++) {
-        if(this.state.word[i]===letter) {
-          times++;
-        }
-      }      
-      return times;
+      if( !this.state.win && !this.state.lost ) {
+        let times = 0;
+        for(let i = 0;i<this.state.word.length;i++) {
+          if(this.state.word[i]===letter) {
+            times++;
+          }
+        }      
+        return times;
+      }
     }
 
     this.checkLetter = (letter)=> {
-      let times = this.howManyTimesExists(letter); 
-      let addToScore = singleCharScore;
-      if(times > 0 )
-      {              
-        if(times > 1)
-        {
-          addToScore = times * ( singleCharScore * times);
-        } 
-        
-        let newScore = this.state.score+addToScore;
-        let newFindedLetters = this.state.findedLetters + times;
+      if( !this.state.win && !this.state.lost ) {
+        let times = this.howManyTimesExists(letter); 
+        let addToScore = singleCharScore;
+        if(times > 0 )
+        {              
+          if(times > 1)
+          {
+            addToScore = times * ( singleCharScore * times);
+          } 
+          
+          let newScore = this.state.score+addToScore;
+          let newFindedLetters = this.state.findedLetters + times;
 
-        this.setState({
-          score: newScore ,
-          findedLetters : newFindedLetters
-        });                
-        this.panelComponent.current.addScore(addToScore);
-        this.wordComponent.current.showLetter(letter);    
-        
-        if(this.state.wordLength === newFindedLetters) {
-          this.panelComponent.current.youWin();
+          this.setState({
+            score: newScore ,
+            findedLetters : newFindedLetters
+          });                
+          this.panelComponent.current.addScore(addToScore);
+          this.wordComponent.current.showLetter(letter);    
+          
+          if(this.state.wordLength === newFindedLetters) {
+            this.panelComponent.current.youWin();
+            this.setState({
+              win:true
+            });
+          }
         }
-      }
-      else
-      {
-        let newMistakes = this.state.mistakes + 1;  
-        this.setState({
-          mistakes: newMistakes
-        })             
-        this.hangManComponent.current.increaseMistakes();
-        if(newMistakes== 7){
-          this.panelComponent.current.youLost();
-        }        
-      }      
+        else
+        {
+          let newMistakes = this.state.mistakes + 1;  
+          this.setState({
+            mistakes: newMistakes
+          })             
+          this.hangManComponent.current.increaseMistakes();
+          if(newMistakes== 7){
+            this.panelComponent.current.youLost();
+            this.setState({
+              lost:true
+            });
+          }        
+        } 
+      }     
     }    
 
     this.check = (letter , checkWin) => {
-      this.checkLetter(letter , this.checkIfWin);
+      if( !this.state.win && !this.state.lost ) {
+        this.checkLetter(letter , this.checkIfWin);
+      }
     }
 
   }
@@ -294,7 +309,7 @@ class Game extends React.Component {
         <div className="col-md-12">
           { 
             letters.map((letter) => {
-              return <Letter letter={letter} fnCheckLetter={evt=> this.check(letter)} />
+              return <Letter letter={letter} check={evt=> this.check(letter)} />
             })
           }
         </div>        
