@@ -23,6 +23,11 @@ class HangMan extends React.Component {
       mistakes : this.props.mistakes
     }
   }
+  increaseMistakes = ()=> {
+    this.setState({
+      mistakes: this.state.mistakes+1
+    })
+  }
   render() {
 
     return (
@@ -80,7 +85,6 @@ class Letter extends React.Component {
     )
   }
 }
-
 class Word extends React.Component {
   
   constructor(props) {
@@ -175,6 +179,7 @@ class Game extends React.Component {
   {
     super(props);
     this.wordComponent = React.createRef();
+    this.hangManComponent = React.createRef();
 
     this.state = {
       mistakes : 0,
@@ -185,7 +190,7 @@ class Game extends React.Component {
       if(this.state.word.indexOf(letter) > -1 ) {          
         this.wordComponent.current.showLetter(letter);      
       } else {
-        alert("Problemmmmm");
+        this.hangManComponent.current.increaseMistakes();
       }
     }
 
@@ -197,7 +202,7 @@ class Game extends React.Component {
       <div>
       <div className="row">
         <div className="col-md-3 hangmanCol">
-        <HangMan mistakes={this.state.mistakes}/>
+        <HangMan mistakes={this.state.mistakes} ref={this.hangManComponent}/>
         </div>
         <div className="col-md-9 panelCol">
           <div className="row">
