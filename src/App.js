@@ -129,7 +129,9 @@ class Word extends React.Component {
     }
     return arr;
   }
-  
+  getDisplayedLetters = ()=> {
+    return this.state.displayedLetters;
+  }
   newGame = (newWord) => {   
      let word = newWord.toUpperCase();
      this.setState ( 
@@ -166,7 +168,6 @@ class Word extends React.Component {
     );
   }
 }
-
 class Panel extends React.Component {
   constructor(props)
   {    
@@ -270,6 +271,30 @@ class Game extends React.Component {
 
   }
 
+  help = () => {
+    if(this.state.score >= 50) {
+    let word = this.state.word;
+    let findedLetters = this.wordComponent.current.getDisplayedLetters();
+    
+    let notFindedChars = [];
+    let j=0;
+    for(let i=0;i<findedLetters.length;i++) {
+      if(findedLetters[i] === "-") {
+        notFindedChars[j] = word[i];
+        j++;
+      }
+    }
+
+    let min = 1;
+    let max = notFindedChars.length;
+    let rand = parseInt( (min + Math.random() * (max - min)) );
+
+    this.checkLetter(notFindedChars[rand-1] , true);
+    } else {
+      alert('You haven\'t score to get a help');
+    }
+  }
+
   howManyTimesExists = (letter) => {
     if( !this.state.win && !this.state.lost ) {
       let times = 0;
@@ -282,7 +307,7 @@ class Game extends React.Component {
     }
   }
 
-  checkLetter = (letter)=> {
+  checkLetter = (letter , isHelp = false)=> {
     if( !this.state.win && !this.state.lost ) {
       let times = this.howManyTimesExists(letter); 
       let addToScore = singleCharScore;
@@ -293,14 +318,17 @@ class Game extends React.Component {
           addToScore = times * ( singleCharScore * times);
         } 
         
-        let newScore = this.state.score+addToScore;
+        if(isHelp) {
+          addToScore = -50;
+        }
+        let newScore = this.state.score + addToScore; ;                
         let newFindedLetters = this.state.findedLetters + times;
 
         this.setState({
           score: newScore ,
           findedLetters : newFindedLetters
         });                
-        this.panelComponent.current.addScore(addToScore);
+        this.panelComponent.current.addScore(addToScore);        
         this.wordComponent.current.showLetter(letter);    
         
         if(this.state.wordLength === newFindedLetters) {
@@ -354,6 +382,7 @@ class Game extends React.Component {
           <div className="row">
             <div className="col-md-12">
               <div className="btn btn-sm btn-primary" onClick={evt=> this.newGame()}>New game</div>              
+              <div className="btn btn-sm btn-warning" onClick={evt=> this.help()}>Help</div>   
             </div>            
           </div>
           <div className="row">&nbsp;</div>
