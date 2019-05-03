@@ -1,7 +1,7 @@
 
 Simple hangman game created with [React JS](https://github.com/facebook/create-react-app)
 
-![React JS Hangman Screenshot](https://raw.githubusercontent.com/username/projectname/branch/path/resources/sc1.png)
+![React JS Hangman Screenshot](https://raw.githubusercontent.com/dhmm/HangMan/master/resources/sc1.png)
 
 ## How to run
 In the project directory, you can run:
