@@ -213,10 +213,17 @@ class Panel extends React.Component {
 
   render() {
     return (
-      <div>
-        <div>High score : <b>{this.state.highScore}</b></div>
-        <div>Score : <b>{this.state.score}</b></div>
-        <div><h4>{this.state.message}</h4></div>
+      <div>        
+        <div className="scorePanel">
+          <div>Score</div>
+          <div className="score">{this.state.score}</div>
+        </div>
+        <div className="messagePanel">
+          <h4>{this.state.message || '-'}</h4>
+        </div>
+        <div className="highScorePanel">
+          <div>High score : {this.state.highScore}</div>
+        </div>
       </div>
     );
   }
