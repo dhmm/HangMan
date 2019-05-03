@@ -111,13 +111,16 @@ class Word extends React.Component {
   constructor(props) {
     super(props);
     let word = this.props.word.toUpperCase();    
-          
+    this.init(word);
+     
+  }
+  init = (newWord) => {
     this.state = 
     {
-      word : word,
-      wordLetters : word.split(''),
-      displayedLetters : this.createEmptyArray(word.length)
-    }    
+      word : newWord,
+      wordLetters : newWord.split(''),
+      displayedLetters : this.createEmptyArray(newWord.length)
+    }  
   }
   createEmptyArray = (length) => {
     let arr = [];
@@ -126,33 +129,19 @@ class Word extends React.Component {
     }
     return arr;
   }
-  /*getDisplayedWord = (word)=> {
-    let displayedWord = "";
-    let len = word.length;
-    for(let i=0;i<len;i++) {
-      displayedWord += " _ ";
-    }
-    return displayedWord;
-  }*/
-
+  
   newGame = (newWord) => {   
-     let word = newWord;
-     this.state = 
+     let word = newWord.toUpperCase();
+     this.setState ( 
      {
-       word : word.split('')      
-     }   
-
-    for(let i=0; i<word.length;i++) {
-      if(this.wordLetters[i].current === undefined) {
-        this.wordLetters[i] = React.createRef();  
-      }
-      this.wordLetters[i].current.newGame(word[i]);
-    }    
+       word : word.split(''),
+       wordLetters : word.split(''),
+       displayedLetters : this.createEmptyArray(word.length)   
+     });      
   }
   
   showLetter = (letter) => {    
-    let newDisplayedLetters = this.state.displayedLetters;
-    
+    let newDisplayedLetters = this.state.displayedLetters;    
     for(let i=0; i<this.state.word.length;i++) {
       if(this.state.word[i] === letter ) {
         newDisplayedLetters[i] = letter.toUpperCase();
