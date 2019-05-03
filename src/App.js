@@ -8,6 +8,7 @@ const letters = [
 ];
 const singleCharScore = 50;
 let WORDS_LIST = [];
+let HIGH_SCORE = 0;
 
 class HangMan extends React.Component {
   constructor(props) {
@@ -173,12 +174,14 @@ class Panel extends React.Component {
   {    
     super(props);
     this.state = {
+      highScore : HIGH_SCORE,
       score: 0 ,
       message : ''      
     }
   }
   newGame = () => {
     this.setState ({
+      highScore : HIGH_SCORE,
       score: 0 ,
       message : ''      
     });
@@ -186,24 +189,32 @@ class Panel extends React.Component {
   addScore(score) {
     this.setState({
       score: this.state.score+score
-    })
+    })    
   }
 
-  youWin() {
+  youWin(addToScore) {
     this.setState({
       message: 'You winnn !!!!'
     })
+    if( (this.state.score + addToScore) >HIGH_SCORE) { 
+      HIGH_SCORE = this.state.score + addToScore;     
+      this.setState({
+        highScore : HIGH_SCORE
+      });
+
+    }
   }
 
   youLost() {
     this.setState({
       message: 'You lost :( !!!!'
     })
-  }
+  } 
 
   render() {
     return (
       <div>
+        <div>High score : <b>{this.state.highScore}</b></div>
         <div>Score : <b>{this.state.score}</b></div>
         <div><h4>{this.state.message}</h4></div>
       </div>
@@ -332,11 +343,11 @@ class Game extends React.Component {
         this.wordComponent.current.showLetter(letter);    
         
         if(this.state.wordLength === newFindedLetters) {
-          this.panelComponent.current.youWin();
+          this.panelComponent.current.youWin(addToScore);
           this.setState({
             win:true
-          });
-          this.gameFinished();
+          });                                       
+          this.gameFinished();          
         }
       }
       else
@@ -359,7 +370,7 @@ class Game extends React.Component {
 
   check = (letter) => {
     if( !this.state.win && !this.state.lost ) {
-      this.checkLetter(letter);
+      this.checkLetter(letter , false);
     }
   }
 
@@ -416,19 +427,17 @@ class Game extends React.Component {
 
 
 function App() {   
-  var rawFile = new XMLHttpRequest();
-  rawFile.open("GET", "./words.txt", false);
-  rawFile.onreadystatechange = () => {
-    if (rawFile.readyState === 4) {
-      if (rawFile.status === 200 || rawFile.status == 0) {
-        var allText = rawFile.responseText;
-        WORDS_LIST = allText.split("\r\n"); 
-        console.log(WORDS_LIST);         
+  var wordsFile = new XMLHttpRequest();
+  wordsFile.open("GET", "./words.txt", false);
+  wordsFile.onreadystatechange = () => {
+    if (wordsFile.readyState === 4) {
+      if (wordsFile.status === 200 || wordsFile.status == 0) {
+        var allText = wordsFile.responseText;
+        WORDS_LIST = allText.split("\r\n");                
       }
     }
   };
-  rawFile.send(null);
-  
+  wordsFile.send(null); 
 
   return (
     <Game/>
